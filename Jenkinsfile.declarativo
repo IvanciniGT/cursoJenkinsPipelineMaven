@@ -1,11 +1,15 @@
 pipeline {
     
-    agent any
-    
-    tools {
-        // Me asegura que al entorno que vaya, que tenga el maven para ejecutarlo
-        maven 'mi maven pa compilar'
+    agent {
+        docker {
+            image "maven:3.8.4-jdk-11"
+        }
     }
+    
+//    tools {
+        // Me asegura que al entorno que vaya, que tenga el maven para ejecutarlo
+//        maven 'mi maven pa compilar'
+//    }
     
     triggers {
         pollSCM '* * * * *'
