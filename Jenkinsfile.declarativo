@@ -18,7 +18,7 @@ pipeline {
                 sh 'mvn compile'
             }
         }
-        stage('Pruebas') {
+        stage('Pruebas Unitarias') {
             steps {
                 echo 'Pedir a maven que ejecute las pruebas unitarias'
                 sh 'mvn test'
@@ -28,6 +28,26 @@ pipeline {
                     echo 'Guardar los informes de pruebas'
                     junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
                 }
+            }
+        }
+        stage('Pruebas Estáticas') {
+            steps {
+//                withSonarQubeEnv('sonarqube'){
+    
+                    echo 'Pedir a maven que mande el proyecto a SonarQube'
+//                    withCredentials([string(credentialsId: 'miCredencialDeSonarQube', variable: 'CREDENCIAL_SQ')]) {
+                        sh '''
+                            mvn sonar:sonar \
+                                -Dsonar.projectKey=proyectoMaven \
+                                -Dsonar.host.url=http://34.254.60.234:9000/ \
+                                -Dsonar.login=92042470d070a6478ad7341a002981e2c9bf0666
+                        '''
+//                    }
+//                }
+//                timeout(time: 10, unit: 'MINUTES'){
+//                    waitForQualityGate abortPipeline: true
+//                }
+                
             }
         }
         stage('Empaquetar') {
